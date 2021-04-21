@@ -1,0 +1,4 @@
+Django==3.2
+django-bulma==0.8.2
+djangorestframework==3.12.4
+Random-Word==1.0.7
