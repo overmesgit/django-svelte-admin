@@ -1,0 +1,4 @@
+cron:
+- description: "check activity"
+  url: /tasks/activity
+  schedule: every 3 mins

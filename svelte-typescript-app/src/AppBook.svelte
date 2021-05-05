@@ -44,7 +44,7 @@
         }
     }
 
-    let tabs = [Book.name, User.name];
+    let tabs = [Book.name.toLowerCase(), User.name.toLowerCase()];
 
 </script>
 
@@ -54,17 +54,18 @@
             <h1 class="title">
                 Django!!!
             </h1>
-            <Router url="">
-                <Route path="/{Book.name}/*">
+            <Router url="" basepath="/app/">
+                <Route>
+                    <MainMenu tabs="{tabs}"/>
+                </Route>
+                <Route path="{Book.name.toLowerCase()}/*">
                     <MainMenu tabs="{tabs}" url="{Book.name}"/>
                     <div class="box">
                         <TableView view="{new BookView()}" detail="{new BookDetailView()}"
                                    edit="{new BookEditView()}"/>
                     </div>
-
                 </Route>
-
-                <Route path="/{User.name}/*">
+                <Route path="{User.name.toLowerCase()}/*">
                     <MainMenu tabs="{tabs}" url="{User.name}"/>
                     <div class="box">
                         <TableView view="{new UserView()}"/>

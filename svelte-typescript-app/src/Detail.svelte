@@ -10,7 +10,7 @@
     {#each view.model.attributeTypeMap as f}
         <p>{f.name}: {obj[f.name]}</p>
     {/each}
-    <Link to="/{view.model.name}/{obj.id}/edit">Edit</Link>
+    <Link to="/app/{view.model.name.toLowerCase()}/{obj.id}/edit">Edit</Link>
 </main>
 
 <style>

@@ -10,7 +10,7 @@
         <ul>
             {#each tabs as tab}
                 <li class:is-active="{url === tab}">
-                    <Link to="/{tab}">{tab}</Link>
+                    <Link to="{tab}">{tab}</Link>
                 </li>
             {/each}
         </ul>

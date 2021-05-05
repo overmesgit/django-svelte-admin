@@ -31,6 +31,7 @@
     }
 
     let selectedObject: AttributeTypeMap = null;
+
     function getRouteObject(params) {
         let currentPageObject = results.filter((e) => String(e.id) === params.id);
         console.log(currentPageObject);
@@ -46,7 +47,7 @@
 
 <main>
 
-    <Router url="/{view.model.name}">
+    <Router url="{view.model.name.toLowerCase()}" basepath="/app">
         <Route path="/">
             <table class="table is-fullwidth">
                 <thead>
@@ -62,7 +63,7 @@
                         {#each view.model.attributeTypeMap as f}
                             {#if f.name === 'name'}
                                 <td>
-                                    <Link to="/{view.model.name}/{u.id}">{u[f.name]}</Link>
+                                    <Link to="/app/{view.model.name.toLowerCase()}/{u.id}">{u[f.name]}</Link>
                                 </td>
                             {:else}
                                 <td>{u[f.name]}</td>
@@ -93,7 +94,10 @@
             {/if}
         </Route>
         <Route path="/:id/edit" let:params>
-            <Edit view="{edit}" obj="{getRouteObject(params)}"/>
+            {getRouteObject(params)}
+            {#if selectedObject}
+                <Edit view="{edit}" obj="{selectedObject}"/>
+            {/if}
         </Route>
     </Router>
 

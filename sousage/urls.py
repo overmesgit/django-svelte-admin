@@ -14,11 +14,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import include, path, re_path
 from rest_framework import routers
 
 from quickstart import views
 from quickstart.views import IndexView, DjangoIndexView, DjangoEditView
+from sousage.middleware import CheckDbActivityView
 
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
@@ -30,10 +32,14 @@ router.register(r'book', views.BookViewSet)
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', IndexView.as_view()),
+    path('app/', IndexView.as_view()),
     path('dj/', DjangoIndexView.as_view(), name='book_list'),
     path('dj/edit/<int:pk>/', DjangoEditView.as_view(), name='book_edit'),
     path('api/', include(router.urls)),
+    path('tasks/activity/', CheckDbActivityView.as_view()),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    re_path(r'^.*$', IndexView.as_view()),
+    re_path(r'app/.*$', IndexView.as_view()),
 ]
+
+# TODO: it is only for local dev
+urlpatterns += staticfiles_urlpatterns()

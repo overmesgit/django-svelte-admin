@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -24,7 +24,7 @@ SECRET_KEY = '*+c-*c($99g7uzar0)alhdowdk7rj+o98!2qe5vf-r3(m$!c61'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -48,6 +48,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'sousage.middleware.db_check_middleware'
 ]
 
 ROOT_URLCONF = 'sousage.urls'
@@ -71,15 +72,33 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'sousage.wsgi.application'
 
+# Admin pass
+# Eaje6xpg0hETdCDTvCvszg
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+# https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/appengine/standard_python3/django/mysite/settings.py
+if os.getenv('GAE_APPLICATION', None):
+    # Running on production App Engine, so use a Google Cloud SQL database.
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'HOST': '/cloudsql/kuroneko-310814:asia-northeast1:kuroneko',
+            'NAME': 'data',
+            'USER': 'data',
+            'PASSWORD': 'Z2w/Dxy/dftJhILvvZ5B1Q',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'data',
+            'USER': 'data',
+            'PASSWORD': 'Z2w/Dxy/dftJhILvvZ5B1Q',
+            'HOST': '127.0.0.1',
+            'PORT': '3316',
+        }
+    }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
@@ -123,7 +142,23 @@ STATICFILES_DIRS = [
     BASE_DIR / "svelte-typescript-app/public",
 ]
 
+STATIC_ROOT = BASE_DIR / "svelte-typescript-app/static"
+
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
 }

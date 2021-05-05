@@ -1,7 +1,6 @@
 from time import sleep
 
 from django import forms
-from django.shortcuts import render
 
 from django.contrib.auth.models import User, Group
 from django.urls import reverse_lazy
