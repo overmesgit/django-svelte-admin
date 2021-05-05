@@ -60,8 +60,9 @@ class DatabaseController:
             last_login = entry.timestamp
             break
         current_delta = datetime.now(timezone.utc) - last_login
+        logger.info(f'{last_login=} {current_delta=}.')
         if not last_login or current_delta.seconds > 3600:
-            logger.info(f'{last_login=} {current_delta=}. Turn database off.')
+            logger.info(f'Turn database off.')
             self.turn_db_off()
 
         return last_login, current_delta
