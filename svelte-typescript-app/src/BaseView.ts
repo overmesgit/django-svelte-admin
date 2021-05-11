@@ -35,7 +35,7 @@ export class BaseView {
 
     constructor() {
         this.api = new ApiApi(createConfiguration({
-            'baseServer': new ServerConfiguration('http://127.0.0.1:8000', {}),
+            'baseServer': new ServerConfiguration('', {}),
             'httpApi': new CSRFHttpLibrary(),
         }));
     }

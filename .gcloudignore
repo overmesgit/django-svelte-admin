@@ -12,7 +12,10 @@
 # below:
 .git
 .gitignore
-#!include:.gitignore
+
+.idea
+svelte-typescript-app/node_modules
+svelte-typescript-app/public/fontawesome-free
 
 # Python pycache:
 __pycache__/

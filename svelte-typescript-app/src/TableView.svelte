@@ -30,17 +30,14 @@
         currentPage = page;
     }
 
-    let selectedObject: AttributeTypeMap = null;
-
-    function getRouteObject(params) {
+    async function getRouteObject(params): Promise<AttributeTypeMap> {
         let currentPageObject = results.filter((e) => String(e.id) === params.id);
-        console.log(currentPageObject);
         if (currentPageObject.length > 0) {
-            selectedObject = currentPageObject[0];
+            return new Promise((resolve, reject) => {
+                resolve(currentPageObject[0]);
+            });
         } else {
-            detail.getObject(params.id).then(res => {
-                selectedObject = res;
-            })
+            return detail.getObject(params.id)
         }
     }
 </script>
@@ -88,16 +85,10 @@
             </nav>
         </Route>
         <Route path="/:id" let:params>
-            {getRouteObject(params)}
-            {#if selectedObject}
-                <Detail view="{detail}" obj="{selectedObject}"/>
-            {/if}
+            <Detail view="{detail}" obj="{getRouteObject(params)}"/>
         </Route>
         <Route path="/:id/edit" let:params>
-            {getRouteObject(params)}
-            {#if selectedObject}
-                <Edit view="{edit}" obj="{selectedObject}"/>
-            {/if}
+            <Edit view="{edit}" obj="{getRouteObject(params)}"/>
         </Route>
     </Router>
 

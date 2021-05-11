@@ -12,8 +12,8 @@ logger = logging.getLogger()
 class CheckDbActivityView(View):
     def get(self, request):
         last_login, timedelta = DatabaseController().check_db_log()
-        return HttpResponse(f'Check database. Last login to db {timedelta.seconds} seconds before '
-                            f'at {last_login.isoformat()}.')
+        return HttpResponse(f'Check database. Last login to db {timedelta} seconds before '
+                            f'at {last_login.isoformat() if last_login else None}.')
 
 
 def db_check_middleware(get_response):

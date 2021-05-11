@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime, timezone, timedelta
+from typing import Optional
 
 from google.cloud.logging_v2 import Client, DESCENDING
 from googleapiclient import discovery
@@ -11,12 +12,11 @@ logger = logging.getLogger()
 class DatabaseController:
     NEVER = 'NEVER'
     ALWAYS = 'ALWAYS'
-    # put in attribute to keep it in memory
-    service = discovery.build('sqladmin', 'v1beta4')
 
     def __init__(self):
         self.project = 'kuroneko-310814'
         self.instance = 'kuroneko'
+        self.service = discovery.build('sqladmin', 'v1beta4')
 
     def turn_db_on(self):
         logger.info('Turn database on')
@@ -50,7 +50,7 @@ class DatabaseController:
         response = request.execute()
         logger.info(f'PatchResponse {response=}')
 
-    def check_db_log(self) -> (datetime, timedelta):
+    def check_db_log(self) -> (Optional[datetime], Optional[int]):
         client = Client(project=self.project)
         log_filter = 'resource.type="cloudsql_database" "connection authorized: user=data"'
         page_size = 10
@@ -59,9 +59,12 @@ class DatabaseController:
         for entry in query:
             last_login = entry.timestamp
             break
-        current_delta = datetime.now(timezone.utc) - last_login
-        logger.info(f'{last_login=} {current_delta=}.')
-        if not last_login or current_delta.seconds > 3600:
+
+        current_delta = None
+        if last_login:
+            current_delta = (datetime.now(timezone.utc) - last_login).seconds
+            logger.info(f'{last_login=} {current_delta=}.')
+        if not last_login or (current_delta and current_delta > 3600):
             logger.info(f'Turn database off.')
             self.turn_db_off()
 

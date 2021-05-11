@@ -89,14 +89,24 @@ if os.getenv('GAE_APPLICATION', None):
         }
     }
 else:
+    # DATABASES = {
+    #     'default': {
+    #         'ENGINE': 'django.db.backends.postgresql',
+    #         'NAME': 'data',
+    #         'USER': 'data',
+    #         'PASSWORD': 'Z2w/Dxy/dftJhILvvZ5B1Q',
+    #         'HOST': '127.0.0.1',
+    #         'PORT': '3316',
+    #     }
+    # }
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'data',
+            'NAME': 'sausage',
             'USER': 'data',
-            'PASSWORD': 'Z2w/Dxy/dftJhILvvZ5B1Q',
+            'PASSWORD': 'kZFVyaKhrE2o+glkuF06Eg==',
             'HOST': '127.0.0.1',
-            'PORT': '3316',
+            'PORT': '5432',
         }
     }
 
