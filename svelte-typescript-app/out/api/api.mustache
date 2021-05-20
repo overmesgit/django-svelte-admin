@@ -19,6 +19,15 @@ import { {{classname}} } from '..{{filename}}{{extensionForDeno}}';
 {{/imports}}
 {{#operations}}
 
+export class ObjectResponse<T> {
+    public object: T | null;
+    public error: any;
+    constructor(object: T | null, error: any) {
+        this.object = object;
+        this.error = error;
+    }
+}
+
 /**
  * {{#description}}{{{description}}}{{/description}}{{^description}}no description{{/description}}
  */
@@ -26,7 +35,7 @@ import { {{classname}} } from '..{{filename}}{{extensionForDeno}}';
 @injectable()
 {{/useInversify}}
 export class {{classname}}RequestFactory extends BaseAPIRequestFactory {
-	
+
 	{{#operation}}
     /**
      {{#notes}}
@@ -42,7 +51,7 @@ export class {{classname}}RequestFactory extends BaseAPIRequestFactory {
     public async {{nickname}}({{#allParams}}{{paramName}}{{^required}}?{{/required}}: {{{dataType}}}, {{/allParams}}options?: Configuration): Promise<RequestContext> {
 		let config = options || this.configuration;
 		{{#allParams}}
-		
+
 		{{#required}}
         // verify required parameter '{{paramName}}' is not null or undefined
         if ({{paramName}} === null || {{paramName}} === undefined) {
@@ -51,7 +60,7 @@ export class {{classname}}RequestFactory extends BaseAPIRequestFactory {
 
 		{{/required}}
 		{{/allParams}}
-		
+
 		// Path Params
     	const localVarPath = '{{{path}}}'{{#pathParams}}
             .replace('{' + '{{baseName}}' + '}', encodeURIComponent(String({{paramName}}))){{/pathParams}};
@@ -66,16 +75,16 @@ export class {{classname}}RequestFactory extends BaseAPIRequestFactory {
         	requestContext.setQueryParam("{{baseName}}", ObjectSerializer.serialize({{paramName}}, "{{{dataType}}}", "{{dataFormat}}"));
         }
 		{{/queryParams}}
-	
+
 		// Header Params
 		{{#headerParams}}
 		requestContext.setHeaderParam("{{baseName}}", ObjectSerializer.serialize({{paramName}}, "{{{dataType}}}", "{{dataFormat}}"));
 		{{/headerParams}}
-	
+
 		// Form Params
 	    {{#hasFormParams}}
 		let localVarFormParams = new FormData();
-		{{/hasFormParams}}	
+		{{/hasFormParams}}
 
 		{{#formParams}}
         {{#isArray}}
@@ -109,10 +118,10 @@ export class {{classname}}RequestFactory extends BaseAPIRequestFactory {
              {{/isFile}}
         }
         {{/isArray}}
-		{{/formParams}}		
+		{{/formParams}}
 	    {{#hasFormParams}}
 		requestContext.setBody(localVarFormParams);
-		{{/hasFormParams}}	
+		{{/hasFormParams}}
 
 		// Body Params
 	    {{#bodyParam}}
@@ -161,7 +170,7 @@ export class {{classname}}ResponseProcessor {
      * @params response Response returned by the server for a request to {{nickname}}
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async {{nickname}}(response: ResponseContext): Promise<{{#returnType}}{{{returnType}}}{{/returnType}} {{^returnType}}void{{/returnType}}> {
+     public async {{nickname}}(response: ResponseContext): Promise<{{#returnType}}ObjectResponse<{{{returnType}}}>{{/returnType}} {{^returnType}}void{{/returnType}}> {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         {{#responses}}
         if (isCodeInRange("{{code}}", response.httpStatusCode)) {
@@ -176,18 +185,18 @@ export class {{classname}}ResponseProcessor {
             ) as {{{dataType}}};
             {{/isBinary}}
             {{#is2xx}}
-            return body;
+            return new ObjectResponse<{{{returnType}}}>(body, null);
             {{/is2xx}}
             {{^is2xx}}
-            throw new ApiException<{{{dataType}}}>({{code}}, body);
+            return new ObjectResponse<{{{returnType}}}>(null, body);
             {{/is2xx}}
             {{/dataType}}
             {{^dataType}}
             {{#is2xx}}
-            return;
+            return new ObjectResponse<void>(null, null);
             {{/is2xx}}
             {{^is2xx}}
-            throw new ApiException<string>(response.httpStatusCode, "{{message}}");
+            return new ObjectResponse<{{{returnType}}}>(null, body);
             {{/is2xx}}
             {{/dataType}}
         }
@@ -205,15 +214,14 @@ export class {{classname}}ResponseProcessor {
                 "{{{returnType}}}", "{{returnFormat}}"
             ) as {{{returnType}}};
             {{/isBinary}}
-            return body;
+            return new ObjectResponse<{{{returnType}}}>(body, null);
             {{/returnType}}
             {{^returnType}}
             return;
             {{/returnType}}
         }
 
-        let body = response.body || "";
-    	throw new ApiException<string>(response.httpStatusCode, "Unknown API Status Code!\nBody: \"" + body + "\"");
+        return new ObjectResponse<{{{returnType}}}>(null, ObjectSerializer.parse(await response.body.text(), contentType));
     }
 			
 	{{/operation}}
