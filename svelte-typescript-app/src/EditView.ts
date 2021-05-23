@@ -1,5 +1,6 @@
 import {BaseView} from "./BaseView";
 
 
-export class EditView extends BaseView {
-}
+// export abstract class EditView<T> extends BaseView {
+//     abstract save(obj: T): Promise<ObjectResponse<T>>
+// }

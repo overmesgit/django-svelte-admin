@@ -1,0 +1,69 @@
+/**
+ * {{#lambda.indented_star_1}}{{{unescapedDescription}}}{{/lambda.indented_star_1}}
+ * @export
+ * @interface {{classname}}
+ */
+export class {{classname}} {{#parent}}extends {{{parent}}} {{/parent}}{
+{{#additionalPropertiesType}}
+    [key: string]: {{{additionalPropertiesType}}}{{#hasVars}} | any{{/hasVars}};
+{{/additionalPropertiesType}}
+{{#vars}}
+    {{#isReadOnly}}readonly {{/isReadOnly}}{{name}}{{^required}}?{{/required}}: {{#isEnum}}{{{datatypeWithEnum}}}{{/isEnum}}{{^isEnum}}{{{datatype}}}{{#isNullable}} | null{{/isNullable}}{{/isEnum}};
+{{/vars}}
+
+    static readonly attributeTypeMap: {[name: string]: {baseName: string, type: string, format: string} } = {
+    {{#vars}}
+        "{{name}}": {
+            "baseName": "{{baseName}}",
+            "type": "{{#isEnum}}{{{datatypeWithEnum}}}{{/isEnum}}{{^isEnum}}{{{dataType}}}{{/isEnum}}",
+            "format": "{{dataFormat}}"
+        }{{^-last}},
+    {{/-last}}
+    {{/vars}}
+    }
+
+    static list(api: ApiApi, page?: number): Promise<InlineResponse2003> {
+        return api.list{{classname}}s(page)
+    }
+
+    static retrieve(api: ApiApi, id: string): Promise<{{classname}}> {
+        return api.retrieve{{classname}}(id)
+    }
+
+    static create(api: ApiApi, obj?: {{classname}}): Promise<{{classname}}> {
+        return api.create{{classname}}(obj)
+    }
+
+    static update(api: ApiApi, id: string, obj?: {{classname}}): Promise<{{classname}}> {
+        return api.update{{classname}}(id, obj)
+    }
+
+    static destroy(api: ApiApi, id: string): Promise<void> {
+        return api.destroy{{classname}}(id)
+    }
+
+
+}{{#hasEnums}}
+
+export namespace {{classname}} {
+    export enum Fields {
+        {{#vars}}
+            {{name}} = "{{name}}"{{^-last}},{{/-last}}
+        {{/vars}}
+    }
+}
+
+{{#vars}}
+{{#isEnum}}
+/**
+* @export
+* @enum {string}
+*/
+export enum {{classname}}{{enumName}} {
+{{#allowableValues}}
+    {{#enumVars}}
+    {{{name}}} = {{{value}}}{{^-last}},{{/-last}}
+    {{/enumVars}}
+{{/allowableValues}}
+}{{/isEnum}}{{/vars}}{{/hasEnums}}
+

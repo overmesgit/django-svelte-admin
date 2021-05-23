@@ -1,45 +1,43 @@
 <script lang="ts">
-    import type {AttributeTypeMap, BaseView} from "./BaseView";
+    import type {BaseAbstract, BaseView} from "./BaseView";
     import Router from "./svelte-routing/Router.svelte";
     import Link from "./svelte-routing/Link.svelte";
     import Route from "./svelte-routing/Route.svelte";
-    import {DetailView} from "./DetailView";
-    import Detail from "./Detail.svelte";
-    import Edit from "./Edit.svelte";
+    // import {DetailView} from "./DetailView";
+    // import Detail from "./Detail.svelte";
+    // import Edit from "./Edit.svelte";
+    // import Create from "./Create.svelte";
 
 
-    export let view: BaseView;
-    export let detail: DetailView;
-    export let edit: Edit;
-    let resp = view.getQuery(1);
+    export let view: BaseView<any>;
+    // export let detail: DetailView;
+    // export let edit: Edit;
+    // export let create: Edit;
 
     let results = [];
     let pageCount = 1;
     let currentPage = 1;
 
-    function onResult(res) {
-        results = res.results;
-        pageCount = Math.ceil(res.count / view.pageSize);
-    }
-
-    resp.then(onResult)
-
     function changePage(page: number) {
-        resp = view.getQuery(page);
-        resp.then(onResult);
+        let resp = view.getQueryInternal(page);
+        resp.then(res => {
+            results = res.results;
+            pageCount = view.pagesCount;
+        });
         currentPage = page;
     }
+    changePage(1)
 
-    async function getRouteObject(params): Promise<AttributeTypeMap> {
-        let currentPageObject = results.filter((e) => String(e.id) === params.id);
-        if (currentPageObject.length > 0) {
-            return new Promise((resolve, reject) => {
-                resolve(currentPageObject[0]);
-            });
-        } else {
-            return detail.getObject(params.id)
-        }
-    }
+    //async function getRouteObject(params): Promise<Base> {
+    //    let currentPageObject = results.filter((e) => String(e.id) === params.id);
+    //    if (currentPageObject.length > 0) {
+    //        return new Promise((resolve, reject) => {
+    //            resolve(currentPageObject[0]);
+    //        });
+    //    } else {
+    //        return detail.getObject(params.id)
+    //    }
+    //}
 </script>
 
 <main>
@@ -49,21 +47,21 @@
             <table class="table is-fullwidth">
                 <thead>
                 <tr>
-                    {#each view.model.attributeTypeMap as f}
-                        <th>{f.name}</th>
+                    {#each view.fields as f}
+                        <th>{f}</th>
                     {/each}
                 </tr>
                 </thead>
                 <tbody>
                 {#each results as u}
                     <tr>
-                        {#each view.model.attributeTypeMap as f}
-                            {#if f.name === 'name'}
+                        {#each view.fields as f}
+                            {#if f === 'name'}
                                 <td>
-                                    <Link to="/app/{view.model.name.toLowerCase()}/{u.id}">{u[f.name]}</Link>
+                                    <Link to="/app/{view.model.name.toLowerCase()}/{u.id}">{u[f]}</Link>
                                 </td>
                             {:else}
-                                <td>{u[f.name]}</td>
+                                <td>{u[f]}</td>
                             {/if}
 
                         {/each}
@@ -84,12 +82,15 @@
                 </ul>
             </nav>
         </Route>
-        <Route path="/:id" let:params>
-            <Detail view="{detail}" obj="{getRouteObject(params)}"/>
-        </Route>
-        <Route path="/:id/edit" let:params>
-            <Edit view="{edit}" obj="{getRouteObject(params)}"/>
-        </Route>
+        <!--        <Route path="/:id" let:params>-->
+        <!--            <Detail view="{detail}" obj="{getRouteObject(params)}"/>-->
+        <!--        </Route>-->
+        <!--        <Route path="/:id/edit" let:params>-->
+        <!--            <Edit view="{edit}" obj="{getRouteObject(params)}"/>-->
+        <!--        </Route>-->
+        <!--         <Route path="/add">-->
+        <!--            <Create view="{create}" />-->
+        <!--        </Route>-->
     </Router>
 
 

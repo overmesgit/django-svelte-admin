@@ -1,11 +1,11 @@
 <script lang="ts">
     import {EditView} from "./EditView";
-    import type {AttributeTypeMap} from "./BaseView";
+    import type {Base} from "./BaseView";
 
     export let view: EditView;
     export let obj: any;
 
-    let my_obj: AttributeTypeMap = null;
+    let my_obj: Base = null;
 
     async function getObject() {
         my_obj = await obj;

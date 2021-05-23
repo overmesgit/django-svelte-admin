@@ -1,12 +1,12 @@
 <script lang="ts">
     import {DetailView} from "./DetailView";
     import Link from "./svelte-routing/Link.svelte";
-    import type {AttributeTypeMap} from "./BaseView";
+    import type {Base} from "./BaseView";
 
     export let view: DetailView;
-    export let obj: Promise<AttributeTypeMap>;
+    export let obj: Promise<Base>;
 
-    let my_obj: AttributeTypeMap = null;
+    let my_obj: Base = null;
 
     async function getObject() {
         my_obj = await obj;
