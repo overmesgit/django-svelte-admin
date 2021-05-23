@@ -22,7 +22,7 @@ export class {{classname}} {{#parent}}extends {{{parent}}} {{/parent}}{
     {{/vars}}
     }
 
-    static list(api: ApiApi, page?: number): Promise<InlineResponse2003> {
+    static list(api: ApiApi, page?: number): Promise<InlineResponse<{{classname}}>> {
         return api.list{{classname}}s(page)
     }
 

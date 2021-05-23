@@ -15,6 +15,13 @@ import {
 } from '../models';
 {{/imports.0}}
 
+export interface InlineResponse<T> {
+    count?: number;
+    next?: string | null;
+    previous?: string | null;
+    results?: Array<T>;
+}
+
 export class ObjectResponse<T> {
     public object: T | null;
     public error: any;

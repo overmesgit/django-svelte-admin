@@ -13,8 +13,7 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type {ApiApi} from "../apis";
-import type {InlineResponse2003} from "./InlineResponse2003";
+import type {ApiApi, InlineResponse} from "../apis";
 /**
  * 
  * @export
@@ -36,7 +35,7 @@ export class Author {
             "format": ""
         }    }
 
-    static list(api: ApiApi, page?: number): Promise<InlineResponse2003> {
+    static list(api: ApiApi, page?: number): Promise<InlineResponse<Author>> {
         return api.listAuthors(page)
     }
 

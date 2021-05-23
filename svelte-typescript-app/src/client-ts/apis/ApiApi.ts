@@ -40,7 +40,13 @@ import {
     UserFromJSON,
     UserToJSON,
 } from '../models';
-import {exists} from "../runtime";
+
+export interface InlineResponse<T> {
+    count?: number;
+    next?: string | null;
+    previous?: string | null;
+    results?: Array<T>;
+}
 
 export interface CreateAuthorRequest {
     author?: Author;
