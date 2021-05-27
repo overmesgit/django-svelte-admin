@@ -58,6 +58,15 @@ export class Author {
 
 }
 
+export namespace Author {
+    export enum Fields {
+            id = "id",
+            name = "name"
+    }
+}
+
+
+
 
 
 export function AuthorFromJSON(json: any): Author {

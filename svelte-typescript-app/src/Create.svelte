@@ -1,12 +1,9 @@
 <script lang="ts">
     import {EditView} from "./EditView";
     import type {Base} from "./BaseView";
-    import {AbstractModel} from "./BaseView";
-    import {ApiException} from "./client-ts/apis/exception";
 
-    export let view: EditView;
-
-    let my_obj: Base = new AbstractModel();
+    export let view: EditView<any>;
+    let my_obj: Base<any>;
 
     async function create() {
         try{

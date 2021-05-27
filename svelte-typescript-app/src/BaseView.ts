@@ -2,6 +2,7 @@ import {
     ApiApi, Configuration
 } from "./client-ts";
 import {getCookie} from "./Cookie";
+import type {SvelteComponent} from "svelte";
 
 export interface ResultInterface<T> {
     count?: number;
@@ -10,23 +11,21 @@ export interface ResultInterface<T> {
     results?: Array<T>;
 }
 
-export interface BaseAbstract {
-    readonly attributeTypeMap: Array<any>
-    list(api: ApiApi, page?: number, options?: Configuration): Promise<any>
-    retrieve(api: ApiApi, id: string, options?: Configuration): Promise<any>
-    create(api: ApiApi, obj?: any, options?: Configuration): Promise<any>
-    update(api: ApiApi, id: string, obj?: any, options?: Configuration): Promise<any>
-    destroy(api: ApiApi, id: string, options?: Configuration): Promise<void>
-}
-
 export interface Base<T> {
-    readonly attributeTypeMap: Array<any>
+    id?: number;
+    readonly attributeTypeMap: {[name: string]: {baseName: string, type: string, format: string} }
     Fields
-    list(api: ApiApi, page?: number, options?: Configuration): Promise<any>
-    retrieve(api: ApiApi, id: string, options?: Configuration): Promise<T>
-    create(api: ApiApi, obj?: T, options?: Configuration): Promise<T>
-    update(api: ApiApi, id: string, obj?: T, options?: Configuration): Promise<T>
-    destroy(api: ApiApi, id: string, options?: Configuration): Promise<void>
+    // Fields: {[s: string]: string}
+
+    list(api: ApiApi, page?: number): Promise<ResultInterface<T>>
+
+    retrieve(api: ApiApi, id: string): Promise<T>
+
+    create(api: ApiApi, obj?: T): Promise<T>
+
+    update(api: ApiApi, id: string, obj?: T): Promise<T>
+
+    destroy(api: ApiApi, id: string): Promise<void>
 }
 
 // class CSRFHttpLibrary extends IsomorphicFetchHttpLibrary {
@@ -36,12 +35,28 @@ export interface Base<T> {
 //     }
 // }
 
+export enum Variables {
+    All = 'All'
+}
+
+type EnumDictionary<T extends string | symbol | number, U> = {
+    [K in T]: U;
+};
+
+type OptionsFlags<Type> = {
+  [key in keyof Type]: SvelteComponent;
+};
+
 
 export class BaseView<T extends Base<T>> {
     public api: ApiApi;
     public model: Base<T>;
 
-    public fields: Array<T['Fields']>
+    public fields: Array<T['Fields']> | Variables.All
+
+
+    // public widgets: {[s: string]: SvelteComponent} = {}
+    public widgets: OptionsFlags<T['Fields']> = {} as OptionsFlags<T['Fields']>
 
     constructor() {
         this.api = new ApiApi(
@@ -52,8 +67,28 @@ export class BaseView<T extends Base<T>> {
         );
     }
 
+    getFieldWidget(field: T['Fields']): SvelteComponent {
+        return this.widgets[field]
+    }
+
+    getFields(): Array<T['Fields']> {
+        if (this.fields === Variables.All) {
+            return Object.values(this.model.Fields)
+        } else {
+            return this.fields
+        }
+    }
+
     getQuery(page?: number): Promise<ResultInterface<T>> {
         return this.model.list(this.api, page)
+    }
+
+    getObject(id: string): Promise<T> {
+        return this.model.retrieve(this.api, id)
+    }
+
+    save(obj: T): Promise<T> {
+        return this.model.update(this.api, obj.id.toString(), obj)
     }
 
     public pagesCount = 1;

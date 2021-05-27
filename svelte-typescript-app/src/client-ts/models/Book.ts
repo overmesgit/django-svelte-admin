@@ -86,6 +86,7 @@ export namespace Book {
     }
 }
 
+
 /**
 * @export
 * @enum {string}

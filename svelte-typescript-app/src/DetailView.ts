@@ -1,10 +1,6 @@
-import {BaseView} from "./BaseView";
+import {Base, BaseView} from "./BaseView";
 
 
-// export class DetailView extends BaseView {
-//
-//     getObject(id: number): Promise<any> {
-//         return new Promise(a => {
-//         });
-//     }
-// }
+export class DetailView<T extends Base<T>> extends BaseView<T> {
+    edit = false
+}

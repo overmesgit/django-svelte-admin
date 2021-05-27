@@ -2,52 +2,45 @@
     import {
         Book, User
     } from "./client-ts";
-    import {BaseView} from "./BaseView";
+    import {BaseView, Variables} from "./BaseView";
     import TableView from "./TableView.svelte";
     import Router from "./svelte-routing/Router.svelte";
     import Route from "./svelte-routing/Route.svelte";
-    // import {DetailView} from "./DetailView";
+    import {DetailView} from "./DetailView";
     // import {EditView} from "./EditView";
     import MainMenu from "./MainMenu.svelte";
-
+    import DateWidget from "./widgets/DateWidget.svelte"
+    import {EditView} from "./EditView";
 
     class BookView extends BaseView<Book> {
         model = Book
-        fields = [Book.Fields.id, Book.Fields.genre]
+        // fields = [Book.Fields.id, Book.Fields.genre]
+        fields = Variables.All
+        widgets = {
+            [Book.Fields.releaseDate]: DateWidget,
+        }
     }
 
-    // class BookDetailView extends DetailView {
-    //     model = Book;
-    //
-    //     getObject(id: number): Promise<Book> {
-    //         return this.api.retrieveBook(id.toString());
-    //     }
-    //
-    // }
-    //
-    // class BookEditView extends EditView<Book> {
-    //     model = Book;
-    //
-    //     save(obj: Book): Promise<ObjectResponse<Book>> {
-    //         return this.api.updateBook(obj.id.toString(), obj);
-    //     }
-    // }
-    //
-    // class BookCreateView extends EditView {
-    //     model = Book;
-    //
-    //     save(obj: Book) {
-    //         return this.api.createBook(obj);
-    //     }
-    // }
-    //
-    // class UserView extends BaseView {
-    //     model = User;
-    //
-    //     getQuery() {
-    //         return this.api.listUsers();
-    //     }
-    // }
+    class BookDetailView extends DetailView<Book> {
+        model = Book;
+        fields = [Book.Fields.id, Book.Fields.genre, Book.Fields.releaseDate]
+        widgets = {
+            [Book.Fields.releaseDate]: DateWidget,
+        }
+    }
+
+    class BookEditView extends EditView<Book> {
+        model = Book;
+    }
+
+    class BookCreateView extends EditView<Book> {
+        model = Book;
+    }
+
+    class UserView extends BaseView<User> {
+        model = User;
+        fields = [User.Fields.id, User.Fields.email]
+    }
 
     let tabs = [Book.name.toLowerCase(), User.name.toLowerCase()];
 
@@ -57,7 +50,7 @@
     <section class="section">
         <div class="container">
             <h1 class="title">
-                Django!
+                Django!!!
             </h1>
             <Router url="" basepath="/app/">
                 <Route>
@@ -66,15 +59,14 @@
                 <Route path="{Book.name.toLowerCase()}/*">
                     <MainMenu tabs="{tabs}" url="{Book.name.toLowerCase()}"/>
                     <div class="box">
-                         <TableView view="{new BookView()}"/>
-<!--                        <TableView view="{new BookView()}" detail="{new BookDetailView()}"-->
-<!--                                   edit="{new BookEditView()}" create="{new BookCreateView()}"/>-->
+                        <TableView view="{new BookView()}" detail="{new BookDetailView()}"
+                                   edit="{new BookEditView()}" create="{new BookCreateView()}"/>
                     </div>
                 </Route>
                 <Route path="{User.name.toLowerCase()}/*">
                     <MainMenu tabs="{tabs}" url="{User.name.toLowerCase()}"/>
                     <div class="box">
-<!--                        <TableView view="{new UserView()}"/>-->
+                        <TableView view="{new UserView()}"/>
                     </div>
                 </Route>
 

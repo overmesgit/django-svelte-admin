@@ -64,6 +64,16 @@ export class Group {
 
 }
 
+export namespace Group {
+    export enum Fields {
+            id = "id",
+            url = "url",
+            name = "name"
+    }
+}
+
+
+
 
 
 export function GroupFromJSON(json: any): Group {

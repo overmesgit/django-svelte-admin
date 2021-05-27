@@ -43,7 +43,7 @@ export class {{classname}} {{#parent}}extends {{{parent}}} {{/parent}}{
     }
 
 
-}{{#hasEnums}}
+}
 
 export namespace {{classname}} {
     export enum Fields {
@@ -52,7 +52,7 @@ export namespace {{classname}} {
         {{/vars}}
     }
 }
-
+{{#hasEnums}}
 {{#vars}}
 {{#isEnum}}
 /**

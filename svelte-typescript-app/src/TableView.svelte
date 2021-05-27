@@ -1,18 +1,19 @@
 <script lang="ts">
-    import type {BaseAbstract, BaseView} from "./BaseView";
+    import type {Base, BaseView} from "./BaseView";
     import Router from "./svelte-routing/Router.svelte";
     import Link from "./svelte-routing/Link.svelte";
     import Route from "./svelte-routing/Route.svelte";
-    // import {DetailView} from "./DetailView";
-    // import Detail from "./Detail.svelte";
-    // import Edit from "./Edit.svelte";
-    // import Create from "./Create.svelte";
+    import {DetailView} from "./DetailView";
+    import Detail from "./Detail.svelte";
+    import Edit from "./Edit.svelte";
+    import Create from "./Create.svelte";
+    import {EditView} from "./EditView";
 
 
     export let view: BaseView<any>;
-    // export let detail: DetailView;
-    // export let edit: Edit;
-    // export let create: Edit;
+    export let detail: DetailView<any>;
+    export let edit: EditView<any>;
+    export let create: EditView<any>;
 
     let results = [];
     let pageCount = 1;
@@ -26,18 +27,20 @@
         });
         currentPage = page;
     }
+
     changePage(1)
 
-    //async function getRouteObject(params): Promise<Base> {
-    //    let currentPageObject = results.filter((e) => String(e.id) === params.id);
-    //    if (currentPageObject.length > 0) {
-    //        return new Promise((resolve, reject) => {
-    //            resolve(currentPageObject[0]);
-    //        });
-    //    } else {
-    //        return detail.getObject(params.id)
-    //    }
-    //}
+    async function getRouteObject(params): Promise<Base<any>> {
+        let currentPageObject = results.filter((e) => String(e.id) === params.id);
+        if (currentPageObject.length > 0) {
+            return new Promise((resolve, reject) => {
+                resolve(currentPageObject[0]);
+            });
+        } else {
+            return detail.getObject(params.id)
+        }
+    }
+    let widget = null
 </script>
 
 <main>
@@ -47,21 +50,25 @@
             <table class="table is-fullwidth">
                 <thead>
                 <tr>
-                    {#each view.fields as f}
+                    {#each view.getFields() as f}
                         <th>{f}</th>
                     {/each}
                 </tr>
                 </thead>
                 <tbody>
-                {#each results as u}
+                {#each results as obj}
                     <tr>
-                        {#each view.fields as f}
+                        {#each view.getFields() as f}
                             {#if f === 'name'}
                                 <td>
-                                    <Link to="/app/{view.model.name.toLowerCase()}/{u.id}">{u[f]}</Link>
+                                    <Link to="/app/{view.model.name.toLowerCase()}/{obj.id}">{obj[f]}</Link>
                                 </td>
                             {:else}
-                                <td>{u[f]}</td>
+                                {#if widget = view.getFieldWidget(f)}
+                                    <td><svelte:component this={widget} value="{obj[f]}"/></td>
+                                {:else }
+                                    <td>{obj[f]}</td>
+                                {/if}
                             {/if}
 
                         {/each}
@@ -82,15 +89,15 @@
                 </ul>
             </nav>
         </Route>
-        <!--        <Route path="/:id" let:params>-->
-        <!--            <Detail view="{detail}" obj="{getRouteObject(params)}"/>-->
-        <!--        </Route>-->
-        <!--        <Route path="/:id/edit" let:params>-->
-        <!--            <Edit view="{edit}" obj="{getRouteObject(params)}"/>-->
-        <!--        </Route>-->
-        <!--         <Route path="/add">-->
-        <!--            <Create view="{create}" />-->
-        <!--        </Route>-->
+        <Route path="/:id" let:params>
+            <Detail view="{detail}" obj="{getRouteObject(params)}"/>
+        </Route>
+        <Route path="/:id/edit" let:params>
+            <Edit view="{edit}" obj="{getRouteObject(params)}"/>
+        </Route>
+         <Route path="/add">
+            <Create view="{create}" />
+        </Route>
     </Router>
 
 

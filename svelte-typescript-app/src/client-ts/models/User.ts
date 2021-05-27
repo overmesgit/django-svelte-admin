@@ -76,6 +76,18 @@ export class User {
 
 }
 
+export namespace User {
+    export enum Fields {
+            id = "id",
+            url = "url",
+            username = "username",
+            email = "email",
+            groups = "groups"
+    }
+}
+
+
+
 
 
 export function UserFromJSON(json: any): User {
