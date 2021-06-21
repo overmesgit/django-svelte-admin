@@ -15,6 +15,15 @@
 import { exists, mapValues } from '../runtime';
 import type {ApiApi, InlineResponse} from "../apis";
 /**
+* @export
+* @enum {string}
+*/
+export enum BookGenreEnum {
+    SciFi = 'sci fi',
+    Comedy = 'comedy'
+}
+
+/**
  * 
  * @export
  * @interface Book
@@ -26,7 +35,7 @@ export class Book {
     releaseDate: Date;
     author: string;
 
-    static readonly attributeTypeMap: {[name: string]: {baseName: string, type: string, format: string} } = {
+    static readonly attributeTypeMap: {[name: string]: {baseName: string, type: string, format: string, enum?: any} } = {
         "id": {
             "baseName": "id",
             "type": "number",
@@ -39,7 +48,8 @@ export class Book {
         },
         "genre": {
             "baseName": "genre",
-            "type": "BookGenreEnum",
+            "type": "enum",
+            "enum": BookGenreEnum,
             "format": ""
         },
         "releaseDate": {
@@ -51,7 +61,8 @@ export class Book {
             "baseName": "author",
             "type": "string",
             "format": ""
-        }    }
+        }
+    }
 
     static list(api: ApiApi, page?: number): Promise<InlineResponse<Book>> {
         return api.listBooks(page)
@@ -85,18 +96,6 @@ export namespace Book {
             author = "author"
     }
 }
-
-
-/**
-* @export
-* @enum {string}
-*/
-export enum BookGenreEnum {
-    SciFi = 'sci fi',
-    Comedy = 'comedy'
-}
-
-
 
 export function BookFromJSON(json: any): Book {
     return BookFromJSONTyped(json, false);

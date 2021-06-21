@@ -14,6 +14,8 @@
 
 import { exists, mapValues } from '../runtime';
 import type {ApiApi, InlineResponse} from "../apis";
+
+
 /**
  * 
  * @export
@@ -23,7 +25,7 @@ export class Author {
     readonly id?: number;
     name: string;
 
-    static readonly attributeTypeMap: {[name: string]: {baseName: string, type: string, format: string} } = {
+    static readonly attributeTypeMap: {[name: string]: {baseName: string, type: string, format: string, enum?: any} } = {
         "id": {
             "baseName": "id",
             "type": "number",
@@ -33,7 +35,8 @@ export class Author {
             "baseName": "name",
             "type": "string",
             "format": ""
-        }    }
+        }
+    }
 
     static list(api: ApiApi, page?: number): Promise<InlineResponse<Author>> {
         return api.listAuthors(page)
@@ -64,10 +67,6 @@ export namespace Author {
             name = "name"
     }
 }
-
-
-
-
 
 export function AuthorFromJSON(json: any): Author {
     return AuthorFromJSONTyped(json, false);

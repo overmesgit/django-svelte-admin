@@ -1,3 +1,18 @@
+{{#hasEnums}}
+{{#vars}}
+{{#isEnum}}
+/**
+* @export
+* @enum {string}
+*/
+export enum {{classname}}{{enumName}} {
+{{#allowableValues}}
+    {{#enumVars}}
+    {{{name}}} = {{{value}}}{{^-last}},{{/-last}}
+    {{/enumVars}}
+{{/allowableValues}}
+}{{/isEnum}}{{/vars}}{{/hasEnums}}
+
 /**
  * {{#lambda.indented_star_1}}{{{unescapedDescription}}}{{/lambda.indented_star_1}}
  * @export
@@ -11,15 +26,17 @@ export class {{classname}} {{#parent}}extends {{{parent}}} {{/parent}}{
     {{#isReadOnly}}readonly {{/isReadOnly}}{{name}}{{^required}}?{{/required}}: {{#isEnum}}{{{datatypeWithEnum}}}{{/isEnum}}{{^isEnum}}{{{datatype}}}{{#isNullable}} | null{{/isNullable}}{{/isEnum}};
 {{/vars}}
 
-    static readonly attributeTypeMap: {[name: string]: {baseName: string, type: string, format: string} } = {
+    static readonly attributeTypeMap: {[name: string]: {baseName: string, type: string, format: string, enum?: any} } = {
     {{#vars}}
         "{{name}}": {
             "baseName": "{{baseName}}",
-            "type": "{{#isEnum}}{{{datatypeWithEnum}}}{{/isEnum}}{{^isEnum}}{{{dataType}}}{{/isEnum}}",
+            "type": {{#isEnum}}"enum",
+            "enum": {{{datatypeWithEnum}}},{{/isEnum}}{{^isEnum}}"{{{dataType}}}",{{/isEnum}}
             "format": "{{dataFormat}}"
         }{{^-last}},
     {{/-last}}
     {{/vars}}
+
     }
 
     static list(api: ApiApi, page?: number): Promise<InlineResponse<{{classname}}>> {
@@ -52,18 +69,3 @@ export namespace {{classname}} {
         {{/vars}}
     }
 }
-{{#hasEnums}}
-{{#vars}}
-{{#isEnum}}
-/**
-* @export
-* @enum {string}
-*/
-export enum {{classname}}{{enumName}} {
-{{#allowableValues}}
-    {{#enumVars}}
-    {{{name}}} = {{{value}}}{{^-last}},{{/-last}}
-    {{/enumVars}}
-{{/allowableValues}}
-}{{/isEnum}}{{/vars}}{{/hasEnums}}
-

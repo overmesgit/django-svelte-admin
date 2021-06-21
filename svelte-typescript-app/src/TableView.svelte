@@ -40,7 +40,6 @@
             return detail.getObject(params.id)
         }
     }
-    let widget = null
 </script>
 
 <main>
@@ -64,8 +63,8 @@
                                     <Link to="/app/{view.model.name.toLowerCase()}/{obj.id}">{obj[f]}</Link>
                                 </td>
                             {:else}
-                                {#if widget = view.getFieldWidget(f)}
-                                    <td><svelte:component this={widget} value="{obj[f]}"/></td>
+                                {#if view.getFieldWidget(f)}
+                                    <td><svelte:component this={view.getFieldWidget(f)} value="{obj[f]}"/></td>
                                 {:else }
                                     <td>{obj[f]}</td>
                                 {/if}

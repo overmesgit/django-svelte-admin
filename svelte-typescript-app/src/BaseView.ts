@@ -1,5 +1,5 @@
 import {
-    ApiApi, Configuration
+    ApiApi, Configuration, FetchParams, RequestContext
 } from "./client-ts";
 import {getCookie} from "./Cookie";
 import type {SvelteComponent} from "svelte";
@@ -13,8 +13,9 @@ export interface ResultInterface<T> {
 
 export interface Base<T> {
     id?: number;
-    readonly attributeTypeMap: {[name: string]: {baseName: string, type: string, format: string} }
+    readonly attributeTypeMap: { [name: string]: { baseName: string, type: string, format: string, enum?: any } }
     Fields
+
     // Fields: {[s: string]: string}
 
     list(api: ApiApi, page?: number): Promise<ResultInterface<T>>
@@ -28,12 +29,12 @@ export interface Base<T> {
     destroy(api: ApiApi, id: string): Promise<void>
 }
 
-// class CSRFHttpLibrary extends IsomorphicFetchHttpLibrary {
-//     send(request: RequestContext): Observable<ResponseContext> {
-//         request.setHeaderParam('X-CSRFToken', getCookie('csrftoken'));
-//         return super.send(request);
-//     }
-// }
+function CSRFMiddleWare(request: RequestContext): Promise<FetchParams> {
+    request.init.headers['X-CSRFToken'] = getCookie('csrftoken');
+    return new Promise((resolve, reject) => {
+        resolve(request);
+    });
+}
 
 export enum Variables {
     All = 'All'
@@ -44,7 +45,7 @@ type EnumDictionary<T extends string | symbol | number, U> = {
 };
 
 type OptionsFlags<Type> = {
-  [key in keyof Type]: SvelteComponent;
+    [key in keyof Type]: SvelteComponent;
 };
 
 
@@ -63,6 +64,7 @@ export class BaseView<T extends Base<T>> {
             new Configuration({
                 'basePath': '',
                 'fetchApi': window.fetch.bind(window),
+                'middleware': [{'pre': CSRFMiddleWare}]
             })
         );
     }

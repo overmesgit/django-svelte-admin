@@ -14,6 +14,8 @@
 
 import { exists, mapValues } from '../runtime';
 import type {ApiApi, InlineResponse} from "../apis";
+
+
 /**
  * 
  * @export
@@ -26,7 +28,7 @@ export class User {
     email?: string;
     groups?: Array<string>;
 
-    static readonly attributeTypeMap: {[name: string]: {baseName: string, type: string, format: string} } = {
+    static readonly attributeTypeMap: {[name: string]: {baseName: string, type: string, format: string, enum?: any} } = {
         "id": {
             "baseName": "id",
             "type": "number",
@@ -51,7 +53,8 @@ export class User {
             "baseName": "groups",
             "type": "Array<string>",
             "format": ""
-        }    }
+        }
+    }
 
     static list(api: ApiApi, page?: number): Promise<InlineResponse<User>> {
         return api.listUsers(page)
@@ -85,10 +88,6 @@ export namespace User {
             groups = "groups"
     }
 }
-
-
-
-
 
 export function UserFromJSON(json: any): User {
     return UserFromJSONTyped(json, false);

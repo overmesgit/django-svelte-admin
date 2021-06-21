@@ -6,4 +6,4 @@
 
 </script>
 
-{(DateTime.fromJSDate(value)).toFormat(format)}
+{DateTime.fromJSDate(value).toFormat(format)}
