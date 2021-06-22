@@ -2,6 +2,7 @@
     import {EditView} from "./EditView";
     import type {Base} from "./BaseView";
     import Enum from "./inputs/Enum.svelte"
+    import DateInput from "./inputs/DateInput.svelte";
 
     export let view: EditView<any>;
     export let obj: any;
@@ -14,21 +15,23 @@
 
     getObject();
 
-    let inputs = {
-        'enum': Enum
+    let defaultInputs = {
+        'enum': Enum,
+        'Date': DateInput
     }
-
 </script>
 
 <main>
     {#if my_obj}
-        {#each Object.keys(view.model.attributeTypeMap) as f}
+        {#each view.getFields() as f}
             <div class="field">
                 <label class="label" for="">{f}</label>
                 <div class="control">
-                    {#if view.model.attributeTypeMap[f].type === 'enum'}
-                        <Enum value="{my_obj[f]}" enumValues="{Object.values(view.model.attributeTypeMap[f].enum)}"/>
-                    {:else}
+                    {#if view.model.attributeTypeMap[f].type in defaultInputs}
+                        <svelte:component this={defaultInputs[view.model.attributeTypeMap[f].type]}
+                                          bind:value="{my_obj[f]}"
+                                          fieldDescription="{view.model.attributeTypeMap[f]}"/>
+                    {:else }
                         <input class="input" bind:value="{my_obj[f]}">
                     {/if}
                 </div>

@@ -1,6 +1,7 @@
 <script lang="ts">
-    export let value: string = null;
-    export let enumValues: { [k: string]: string };
+    export let value: string = null
+    export let fieldDescription: { baseName: string, type: string, format: string, enum?: any }
+    let enumValues: { [k: string]: string } = Object.values(fieldDescription.enum)
 
 </script>
 

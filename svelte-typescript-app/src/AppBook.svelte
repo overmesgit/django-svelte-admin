@@ -2,7 +2,7 @@
     import {
         Book, User
     } from "./client-ts";
-    import {BaseView, Variables} from "./BaseView";
+    import {BaseView, Fields} from "./BaseView";
     import TableView from "./TableView.svelte";
     import Router from "./svelte-routing/Router.svelte";
     import Route from "./svelte-routing/Route.svelte";
@@ -14,8 +14,7 @@
 
     class BookView extends BaseView<Book> {
         model = Book
-        // fields = [Book.Fields.id, Book.Fields.genre]
-        fields = Variables.All
+        fields = Fields.All
         widgets = {
             [Book.Fields.releaseDate]: DateWidget,
         }
@@ -31,6 +30,7 @@
 
     class BookEditView extends EditView<Book> {
         model = Book;
+        fields = [Book.Fields.name, Book.Fields.genre, Book.Fields.releaseDate]
     }
 
     class BookCreateView extends EditView<Book> {

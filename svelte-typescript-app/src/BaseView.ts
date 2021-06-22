@@ -36,7 +36,7 @@ function CSRFMiddleWare(request: RequestContext): Promise<FetchParams> {
     });
 }
 
-export enum Variables {
+export enum Fields {
     All = 'All'
 }
 
@@ -49,11 +49,11 @@ type OptionsFlags<Type> = {
 };
 
 
-export class BaseView<T extends Base<T>> {
-    public api: ApiApi;
-    public model: Base<T>;
+export abstract class BaseView<T extends Base<T>> {
+    public api: ApiApi
+    public model: Base<T>
 
-    public fields: Array<T['Fields']> | Variables.All
+    public fields: Array<T['Fields']> | Fields.All
 
 
     // public widgets: {[s: string]: SvelteComponent} = {}
@@ -74,7 +74,7 @@ export class BaseView<T extends Base<T>> {
     }
 
     getFields(): Array<T['Fields']> {
-        if (this.fields === Variables.All) {
+        if (this.fields === Fields.All) {
             return Object.values(this.model.Fields)
         } else {
             return this.fields

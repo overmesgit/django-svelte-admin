@@ -46,6 +46,7 @@
 
     <Router url="{view.model.name.toLowerCase()}" basepath="/app">
         <Route path="/">
+            <button class="button is-primary">Add</button>
             <table class="table is-fullwidth">
                 <thead>
                 <tr>
