@@ -1,8 +1,6 @@
-import {
-    ApiApi, Configuration, FetchParams, RequestContext
-} from "./client-ts";
-import {getCookie} from "./Cookie";
-import type {SvelteComponent} from "svelte";
+import {ApiApi, Configuration, FetchParams, RequestContext} from "./client-ts"
+import {getCookie} from "./Cookie"
+import type {SvelteComponent} from "svelte"
 
 export interface ResultInterface<T> {
     count?: number;
@@ -11,9 +9,20 @@ export interface ResultInterface<T> {
     results?: Array<T>;
 }
 
+export interface FieldSchema {
+    baseName: string,
+    type: string,
+    format: string,
+    enum?: any
+}
+
+interface AttributeTypeMap {
+    [name: string]: FieldSchema
+}
+
 export interface Base<T> {
     id?: number;
-    readonly attributeTypeMap: { [name: string]: { baseName: string, type: string, format: string, enum?: any } }
+    readonly attributeTypeMap: AttributeTypeMap
     Fields
 
     // Fields: {[s: string]: string}
@@ -30,10 +39,10 @@ export interface Base<T> {
 }
 
 function CSRFMiddleWare(request: RequestContext): Promise<FetchParams> {
-    request.init.headers['X-CSRFToken'] = getCookie('csrftoken');
+    request.init.headers['X-CSRFToken'] = getCookie('csrftoken')
     return new Promise((resolve, reject) => {
-        resolve(request);
-    });
+        resolve(request)
+    })
 }
 
 export enum Fields {
@@ -66,7 +75,7 @@ export abstract class BaseView<T extends Base<T>> {
                 'fetchApi': window.fetch.bind(window),
                 'middleware': [{'pre': CSRFMiddleWare}]
             })
-        );
+        )
     }
 
     modelName(): string {
@@ -85,6 +94,14 @@ export abstract class BaseView<T extends Base<T>> {
         }
     }
 
+    getFieldsSchema(): AttributeTypeMap {
+        let fields = this.getFields()
+        return Object.assign({}, ...
+            Object.entries(this.model.attributeTypeMap).filter(([k, v]) => fields.indexOf(k) >= 0)
+                .map(([k, v]) => ({[k]: v}))
+        )
+    }
+
     getQuery(page?: number): Promise<ResultInterface<T>> {
         return this.model.list(this.api, page)
     }
@@ -101,16 +118,16 @@ export abstract class BaseView<T extends Base<T>> {
         }
     }
 
-    public pagesCount = 1;
-    public currentPage = 1;
-    public pageSize = 10;
+    public pagesCount = 1
+    public currentPage = 1
+    public pageSize = 10
 
     getQueryInternal(page?: number): Promise<ResultInterface<T>> {
-        let promise = this.getQuery(page);
+        let promise = this.getQuery(page)
         promise.then(value => {
-            this.pagesCount = Math.ceil(value.count / this.pageSize);
+            this.pagesCount = Math.ceil(value.count / this.pageSize)
         })
-        this.currentPage = page;
-        return promise;
+        this.currentPage = page
+        return promise
     }
 }

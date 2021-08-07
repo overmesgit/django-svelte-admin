@@ -27,18 +27,17 @@
             }
         )
     }
-
 </script>
 
 <main>
-    {#each view.getFields() as f}
+    {#each Object.entries(view.getFieldsSchema()) as [f, schema]}
         <div class="field">
-            <label class="label" for="">{f}</label>
+            <label class="label is-capitalized" for="">{f}{#if schema.required}<span class="has-text-danger">*</span>{/if}</label>
             <div class="control">
-                {#if view.model.attributeTypeMap[f].type in defaultInputs}
-                    <svelte:component this={defaultInputs[view.model.attributeTypeMap[f].type]}
+                {#if schema.type in defaultInputs}
+                    <svelte:component this={defaultInputs[schema.type]}
                                       bind:value="{my_obj[f]}"
-                                      fieldDescription="{view.model.attributeTypeMap[f]}"/>
+                                      fieldDescription="{schema}"/>
                 {:else }
                     <input class="input" bind:value="{my_obj[f]}">
                 {/if}
