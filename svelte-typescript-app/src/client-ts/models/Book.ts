@@ -35,32 +35,37 @@ export class Book {
     releaseDate: Date;
     author: string;
 
-    static readonly attributeTypeMap: {[name: string]: {baseName: string, type: string, format: string, enum?: any} } = {
+    static readonly attributeTypeMap: {[name: string]: {baseName: string, type: string, format: string, enum?: any, required: boolean} } = {
         "id": {
             "baseName": "id",
             "type": "number",
-            "format": ""
+            "format": "",
+            "required": false
         },
         "name": {
             "baseName": "name",
             "type": "string",
-            "format": ""
+            "format": "",
+            "required": true
         },
         "genre": {
             "baseName": "genre",
             "type": "enum",
             "enum": BookGenreEnum,
-            "format": ""
+            "format": "",
+            "required": true
         },
         "releaseDate": {
             "baseName": "release_date",
             "type": "Date",
-            "format": "date"
+            "format": "date",
+            "required": true
         },
         "author": {
             "baseName": "author",
             "type": "string",
-            "format": ""
+            "format": "",
+            "required": true
         }
     }
 

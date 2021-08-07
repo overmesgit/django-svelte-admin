@@ -28,31 +28,36 @@ export class User {
     email?: string;
     groups?: Array<string>;
 
-    static readonly attributeTypeMap: {[name: string]: {baseName: string, type: string, format: string, enum?: any} } = {
+    static readonly attributeTypeMap: {[name: string]: {baseName: string, type: string, format: string, enum?: any, required: boolean} } = {
         "id": {
             "baseName": "id",
             "type": "number",
-            "format": ""
+            "format": "",
+            "required": false
         },
         "url": {
             "baseName": "url",
             "type": "string",
-            "format": ""
+            "format": "",
+            "required": false
         },
         "username": {
             "baseName": "username",
             "type": "string",
-            "format": ""
+            "format": "",
+            "required": true
         },
         "email": {
             "baseName": "email",
             "type": "string",
-            "format": "email"
+            "format": "email",
+            "required": false
         },
         "groups": {
             "baseName": "groups",
             "type": "Array<string>",
-            "format": ""
+            "format": "",
+            "required": false
         }
     }
 

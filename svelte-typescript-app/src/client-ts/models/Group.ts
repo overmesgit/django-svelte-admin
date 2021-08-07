@@ -26,21 +26,24 @@ export class Group {
     readonly url?: string;
     name: string;
 
-    static readonly attributeTypeMap: {[name: string]: {baseName: string, type: string, format: string, enum?: any} } = {
+    static readonly attributeTypeMap: {[name: string]: {baseName: string, type: string, format: string, enum?: any, required: boolean} } = {
         "id": {
             "baseName": "id",
             "type": "number",
-            "format": ""
+            "format": "",
+            "required": false
         },
         "url": {
             "baseName": "url",
             "type": "string",
-            "format": ""
+            "format": "",
+            "required": false
         },
         "name": {
             "baseName": "name",
             "type": "string",
-            "format": ""
+            "format": "",
+            "required": true
         }
     }
 
