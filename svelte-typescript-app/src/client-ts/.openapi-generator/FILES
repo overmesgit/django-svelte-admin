@@ -4,10 +4,6 @@ index.ts
 models/Author.ts
 models/Book.ts
 models/Group.ts
-models/InlineResponse200.ts
-models/InlineResponse2001.ts
-models/InlineResponse2002.ts
-models/InlineResponse2003.ts
 models/User.ts
 models/index.ts
 runtime.ts
