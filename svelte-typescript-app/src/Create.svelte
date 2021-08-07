@@ -1,33 +1,43 @@
 <script lang="ts">
-    import {EditView} from "./EditView";
-    import type {Base} from "./BaseView";
+    import {EditView} from "./EditView"
+    import Enum from "./inputs/Enum.svelte"
+    import DateInput from "./inputs/DateInput.svelte"
+    import { navigate } from "./svelte-routing"
 
-    export let view: EditView<any>;
-    let my_obj: Base<any>;
+    export let view: EditView<any>
+    export let successUrl: string
+    let Model: any = view.model
+    let my_obj: any = new Model()
 
-    async function create() {
-        try{
-            let resp = await view.save(my_obj);
-            console.log(resp);
-        } catch (e) {
-            //
-            console.log(e);
-            console.log(e.result);
-        }
+    let defaultInputs = {
+        'enum': Enum,
+        'Date': DateInput
+    }
+
+    function create() {
+        view.save(my_obj).then(
+            navigate(successUrl)
+        )
     }
 
 </script>
 
 <main>
-    {#each view.model.attributeTypeMap as f}
-        {#if f.name !== 'id'}
-            <label>
-                {f.name}
-                <input bind:value="{my_obj[f.name]}">
-            </label>
-        {/if}
+    {#each view.getFields() as f}
+        <div class="field">
+            <label class="label" for="">{f}</label>
+            <div class="control">
+                {#if view.model.attributeTypeMap[f].type in defaultInputs}
+                    <svelte:component this={defaultInputs[view.model.attributeTypeMap[f].type]}
+                                      bind:value="{my_obj[f]}"
+                                      fieldDescription="{view.model.attributeTypeMap[f]}"/>
+                {:else }
+                    <input class="input" bind:value="{my_obj[f]}">
+                {/if}
+            </div>
+        </div>
     {/each}
-    <button on:click|once={create}>Create</button>
+    <button on:click|once={create}>Save</button>
 </main>
 
 <style>

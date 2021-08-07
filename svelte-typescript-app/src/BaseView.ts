@@ -69,6 +69,10 @@ export abstract class BaseView<T extends Base<T>> {
         );
     }
 
+    modelName(): string {
+        return this.model['name'].toLowerCase()
+    }
+
     getFieldWidget(field: T['Fields']): SvelteComponent {
         return this.widgets[field]
     }
@@ -90,7 +94,11 @@ export abstract class BaseView<T extends Base<T>> {
     }
 
     save(obj: T): Promise<T> {
-        return this.model.update(this.api, obj.id.toString(), obj)
+        if (obj.id) {
+            return this.model.update(this.api, obj.id.toString(), obj)
+        } else {
+            return this.model.create(this.api, obj)
+        }
     }
 
     public pagesCount = 1;

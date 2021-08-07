@@ -1,41 +1,40 @@
 <script lang="ts">
-    import type {Base, BaseView} from "./BaseView";
-    import Router from "./svelte-routing/Router.svelte";
-    import Link from "./svelte-routing/Link.svelte";
-    import Route from "./svelte-routing/Route.svelte";
-    import {DetailView} from "./DetailView";
-    import Detail from "./Detail.svelte";
-    import Edit from "./Edit.svelte";
-    import Create from "./Create.svelte";
-    import {EditView} from "./EditView";
+    import type {Base, BaseView} from "./BaseView"
+    import {Router, Link, Route} from "./svelte-routing"
+    import {DetailView} from "./DetailView"
+    import Detail from "./Detail.svelte"
+    import Edit from "./Edit.svelte"
+    import Create from "./Create.svelte"
+    import {EditView} from "./EditView"
 
 
-    export let view: BaseView<any>;
-    export let detail: DetailView<any>;
-    export let edit: EditView<any>;
-    export let create: EditView<any>;
+    export let view: BaseView<any>
+    export let detail: DetailView<any>
+    export let edit: EditView<any>
+    export let create: EditView<any>
 
-    let results = [];
-    let pageCount = 1;
-    let currentPage = 1;
+    let basePath = '/app'
+    let results = []
+    let pageCount = 1
+    let currentPage = 1
 
     function changePage(page: number) {
-        let resp = view.getQueryInternal(page);
+        let resp = view.getQueryInternal(page)
         resp.then(res => {
-            results = res.results;
-            pageCount = view.pagesCount;
-        });
-        currentPage = page;
+            results = res.results
+            pageCount = view.pagesCount
+        })
+        currentPage = page
     }
 
     changePage(1)
 
     async function getRouteObject(params): Promise<Base<any>> {
-        let currentPageObject = results.filter((e) => String(e.id) === params.id);
+        let currentPageObject = results.filter((e) => String(e.id) === params.id)
         if (currentPageObject.length > 0) {
             return new Promise((resolve, reject) => {
-                resolve(currentPageObject[0]);
-            });
+                resolve(currentPageObject[0])
+            })
         } else {
             return detail.getObject(params.id)
         }
@@ -44,9 +43,9 @@
 
 <main>
 
-    <Router url="{view.model.name.toLowerCase()}" basepath="/app">
+    <Router url="{view.modelName()}" basepath="{basePath}">
         <Route path="/">
-            <button class="button is-primary">Add</button>
+            <Link to="{basePath}/{view.modelName()}/add" class="button">Add</Link>
             <table class="table is-fullwidth">
                 <thead>
                 <tr>
@@ -61,11 +60,14 @@
                         {#each view.getFields() as f}
                             {#if f === 'name'}
                                 <td>
-                                    <Link to="/app/{view.model.name.toLowerCase()}/{obj.id}">{obj[f]}</Link>
+                                    <Link to="{basePath}/{view.modelName()}/{obj.id}">{obj[f]}</Link>
                                 </td>
                             {:else}
                                 {#if view.getFieldWidget(f)}
-                                    <td><svelte:component this={view.getFieldWidget(f)} value="{obj[f]}"/></td>
+                                    <td>
+                                        <svelte:component this={view.getFieldWidget(f)}
+                                                          value="{obj[f]}"/>
+                                    </td>
                                 {:else }
                                     <td>{obj[f]}</td>
                                 {/if}
@@ -95,8 +97,8 @@
         <Route path="/:id/edit" let:params>
             <Edit view="{edit}" obj="{getRouteObject(params)}"/>
         </Route>
-         <Route path="/add">
-            <Create view="{create}" />
+        <Route path="/add">
+            <Create view="{create}" successUrl="{basePath}/{view.modelName()}"/>
         </Route>
     </Router>
 

@@ -2,7 +2,9 @@
     export let value: string = null
     export let fieldDescription: { baseName: string, type: string, format: string, enum?: any }
     let enumValues: { [k: string]: string } = Object.values(fieldDescription.enum)
-
+    if (value == null) {
+        value = enumValues[0];
+    }
 </script>
 
 <div class="select">

@@ -7,7 +7,6 @@
     import Router from "./svelte-routing/Router.svelte";
     import Route from "./svelte-routing/Route.svelte";
     import {DetailView} from "./DetailView";
-    // import {EditView} from "./EditView";
     import MainMenu from "./MainMenu.svelte";
     import DateWidget from "./widgets/DateWidget.svelte"
     import {EditView} from "./EditView";
@@ -34,7 +33,8 @@
     }
 
     class BookCreateView extends EditView<Book> {
-        model = Book;
+        model = Book
+        fields = [Book.Fields.name, Book.Fields.genre, Book.Fields.releaseDate, Book.Fields.author]
     }
 
     class UserView extends BaseView<User> {
