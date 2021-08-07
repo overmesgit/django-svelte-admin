@@ -6,7 +6,7 @@
     import Edit from "./Edit.svelte"
     import Create from "./Create.svelte"
     import {EditView} from "./EditView"
-    import Loading from "./Loading.svelte"
+    import LoadingBlock from "./widgets/LoadingBlock.svelte"
 
 
     export let view: BaseView<any>
@@ -52,15 +52,7 @@
             <Link to="{basePath}/{view.modelName()}/add" class="button">Add</Link>
             <div style="position: relative">
                 {#if loading}
-                    <div style="position: absolute; height: 98%; width: 100%; margin-top: 5px;
-                    background-color: grey; opacity: 0.5;">
-                    </div>
-                    <div style="position: absolute; height: 98%; width: 100%;
-                    margin-top: 5px; display: flex; align-items: center; justify-content: center;">
-                        <div style="font-size: 3em;">
-                            <Loading/>
-                        </div>
-                    </div>
+                    <LoadingBlock/>
                 {/if}
                 <table class="table is-fullwidth">
                     <thead>
@@ -103,11 +95,11 @@
             </div>
             <nav class="pagination" role="navigation" aria-label="pagination">
                 <ul class="pagination-list">
-                    {#each [...Array(pageCount).keys()] as i}
+                    {#each {length: pageCount} as _, i}
                         <li>
                             <!-- svelte-ignore a11y-missing-attribute -->
                             <a class="pagination-link" class:is-current="{currentPage === i+1}"
-                               on:click={changePage(i+1)}
+                               on:click={() => changePage(i+1)}
                                aria-label="Page {i+1}" aria-current="page">{i + 1}</a>
                         </li>
                     {/each}
