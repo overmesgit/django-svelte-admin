@@ -7,4 +7,5 @@
     onDestroy(() => clearInterval(interval));
 </script>
 
-Loading{#each [...Array(seconds % 3 + 1).keys()] as i}.{/each}
+<span>Loading</span><span style="position: absolute">{#each {length: seconds % 5} as i}.{/each}</span>
+
