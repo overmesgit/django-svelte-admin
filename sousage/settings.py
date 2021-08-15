@@ -48,7 +48,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'sousage.middleware.db_check_middleware'
 ]
 
 ROOT_URLCONF = 'sousage.urls'
@@ -72,39 +71,27 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'sousage.wsgi.application'
 
-# Admin pass
-# Eaje6xpg0hETdCDTvCvszg
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 # https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/appengine/standard_python3/django/mysite/settings.py
-if os.getenv('GAE_APPLICATION', None):
+if os.getenv('AWS', None):
     # Running on production App Engine, so use a Google Cloud SQL database.
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'HOST': '/cloudsql/kuroneko-310814:asia-northeast1:kuroneko',
-            'NAME': 'data',
-            'USER': 'data',
-            'PASSWORD': 'Z2w/Dxy/dftJhILvvZ5B1Q',
+            'HOST': os.getenv('DB_HOST'),
+            'NAME': 'mydb',
+            'USER': os.getenv('DB_USER'),
+            'PASSWORD': os.getenv('DB_PASS'),
         }
     }
 else:
-    # DATABASES = {
-    #     'default': {
-    #         'ENGINE': 'django.db.backends.postgresql',
-    #         'NAME': 'data',
-    #         'USER': 'data',
-    #         'PASSWORD': 'Z2w/Dxy/dftJhILvvZ5B1Q',
-    #         'HOST': '127.0.0.1',
-    #         'PORT': '3316',
-    #     }
-    # }
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': 'sausage',
             'USER': 'data',
-            'PASSWORD': 'kZFVyaKhrE2o+glkuF06Eg==',
+            'PASSWORD': os.getenv('DB_PASS'),
             'HOST': '127.0.0.1',
             'PORT': '5432',
         }

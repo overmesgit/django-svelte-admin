@@ -15,12 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.http import HttpResponse
 from django.urls import include, path, re_path
 from rest_framework import routers
 
 from quickstart import views
 from quickstart.views import IndexView, DjangoIndexView, DjangoEditView
-from sousage.middleware import CheckDbActivityView
 
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
@@ -28,15 +28,24 @@ router.register(r'groups', views.GroupViewSet)
 router.register(r'author', views.AuthorViewSet)
 router.register(r'book', views.BookViewSet)
 
+
+def health_check(request):
+    return HttpResponse("OK")
+
+def run_migrate(request):
+    run_c
+
+
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
+    path('', health_check),
+    path('migrate/', admin.site.urls),
     path('admin/', admin.site.urls),
     path('app/', IndexView.as_view()),
     path('dj/', DjangoIndexView.as_view(), name='book_list'),
     path('dj/edit/<int:pk>/', DjangoEditView.as_view(), name='book_edit'),
     path('api/', include(router.urls)),
-    path('tasks/activity/', CheckDbActivityView.as_view()),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     re_path(r'app/.*$', IndexView.as_view()),
 ]

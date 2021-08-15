@@ -10,6 +10,7 @@ from rest_framework import permissions
 
 from quickstart.models import Book, Author
 from quickstart.serializers import UserSerializer, GroupSerializer, AuthorSerializer, BookSerializer
+from schema_generator import SchemaGenerator
 
 
 class IndexView(TemplateView):
@@ -72,3 +73,4 @@ class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [permissions.IsAuthenticated]
+    schema = SchemaGenerator()

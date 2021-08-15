@@ -50,7 +50,7 @@
     <section class="section">
         <div class="container">
             <h1 class="title">
-                Django!!!
+                Django!!!!
             </h1>
             <Router url="" basepath="/app/">
                 <Route>
