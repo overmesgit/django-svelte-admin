@@ -32,15 +32,11 @@ router.register(r'book', views.BookViewSet)
 def health_check(request):
     return HttpResponse("OK")
 
-def run_migrate(request):
-    run_c
-
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     path('', health_check),
-    path('migrate/', admin.site.urls),
     path('admin/', admin.site.urls),
     path('app/', IndexView.as_view()),
     path('dj/', DjangoIndexView.as_view(), name='book_list'),
