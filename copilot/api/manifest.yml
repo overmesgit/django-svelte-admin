@@ -34,7 +34,7 @@ variables:                    # Pass environment variables as key value pairs.
   DB_HOST: database-3.cluster-cadchyhzggxu.ap-northeast-1.rds.amazonaws.com
   DB_PASS: ${POSTGRES_PASS}
   DB_PORT: 5432
-  DB_USER: posgres
+  DB_USER: postgres
 
 #secrets:                      # Pass secrets from AWS Systems Manager (SSM) Parameter Store.
 ##  GITHUB_TOKEN: GITHUB_TOKEN  # The key is the name of the environment variable, the value is the name of the SSM parameter.
