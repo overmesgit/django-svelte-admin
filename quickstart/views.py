@@ -5,7 +5,7 @@ from django import forms
 from django.contrib.auth.models import User, Group
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, UpdateView
-from rest_framework import viewsets
+from rest_framework import viewsets, filters
 from rest_framework import permissions
 
 from quickstart.models import Book, Author
@@ -74,3 +74,6 @@ class BookViewSet(viewsets.ModelViewSet):
     serializer_class = BookSerializer
     permission_classes = [permissions.IsAuthenticated]
     schema = SchemaGenerator()
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['name', 'id', 'release_date']
+    ordering = ['id']

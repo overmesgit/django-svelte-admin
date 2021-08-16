@@ -79,6 +79,7 @@ export interface DestroyAuthorRequest {
 
 export interface DestroyBookRequest {
     id: string;
+    ordering?: string;
 }
 
 export interface DestroyGroupRequest {
@@ -95,6 +96,7 @@ export interface ListAuthorsRequest {
 
 export interface ListBooksRequest {
     page?: number;
+    ordering?: string;
 }
 
 export interface ListGroupsRequest {
@@ -112,6 +114,7 @@ export interface PartialUpdateAuthorRequest {
 
 export interface PartialUpdateBookRequest {
     id: string;
+    ordering?: string;
     book?: Book;
 }
 
@@ -131,6 +134,7 @@ export interface RetrieveAuthorRequest {
 
 export interface RetrieveBookRequest {
     id: string;
+    ordering?: string;
 }
 
 export interface RetrieveGroupRequest {
@@ -148,6 +152,7 @@ export interface UpdateAuthorRequest {
 
 export interface UpdateBookRequest {
     id: string;
+    ordering?: string;
     book?: Book;
 }
 
@@ -321,6 +326,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         const queryParameters: any = {};
 
+        if (requestParameters.ordering !== undefined) {
+            queryParameters['ordering'] = requestParameters.ordering;
+        }
+
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
@@ -336,8 +345,8 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      * API endpoint that allows groups to be viewed or edited.
      */
-    async destroyBook(id: string): Promise<void> {
-        await this.destroyBookRaw({ id: id });
+    async destroyBook(id: string, ordering?: string): Promise<void> {
+        await this.destroyBookRaw({ id: id, ordering: ordering });
     }
 
     /**
@@ -438,6 +447,10 @@ export class ApiApi extends runtime.BaseAPI {
             queryParameters['page'] = requestParameters.page;
         }
 
+        if (requestParameters.ordering !== undefined) {
+            queryParameters['ordering'] = requestParameters.ordering;
+        }
+
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
@@ -453,8 +466,8 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      * API endpoint that allows groups to be viewed or edited.
      */
-    async listBooks(page?: number): Promise<InlineResponse2003> {
-        const response = await this.listBooksRaw({ page: page });
+    async listBooks(page?: number, ordering?: string): Promise<InlineResponse2003> {
+        const response = await this.listBooksRaw({ page: page, ordering: ordering });
         return await response.value();
     }
 
@@ -561,6 +574,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         const queryParameters: any = {};
 
+        if (requestParameters.ordering !== undefined) {
+            queryParameters['ordering'] = requestParameters.ordering;
+        }
+
         const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
@@ -579,8 +596,8 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      * API endpoint that allows groups to be viewed or edited.
      */
-    async partialUpdateBook(id: string, book?: Book): Promise<Book> {
-        const response = await this.partialUpdateBookRaw({ id: id, book: book });
+    async partialUpdateBook(id: string, ordering?: string, book?: Book): Promise<Book> {
+        const response = await this.partialUpdateBookRaw({ id: id, ordering: ordering, book: book });
         return await response.value();
     }
 
@@ -690,6 +707,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         const queryParameters: any = {};
 
+        if (requestParameters.ordering !== undefined) {
+            queryParameters['ordering'] = requestParameters.ordering;
+        }
+
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
@@ -705,8 +726,8 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      * API endpoint that allows groups to be viewed or edited.
      */
-    async retrieveBook(id: string): Promise<Book> {
-        const response = await this.retrieveBookRaw({ id: id });
+    async retrieveBook(id: string, ordering?: string): Promise<Book> {
+        const response = await this.retrieveBookRaw({ id: id, ordering: ordering });
         return await response.value();
     }
 
@@ -813,6 +834,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         const queryParameters: any = {};
 
+        if (requestParameters.ordering !== undefined) {
+            queryParameters['ordering'] = requestParameters.ordering;
+        }
+
         const headerParameters: runtime.HTTPHeaders = {};
 
         headerParameters['Content-Type'] = 'application/json';
@@ -831,8 +856,8 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      * API endpoint that allows groups to be viewed or edited.
      */
-    async updateBook(id: string, book?: Book): Promise<Book> {
-        const response = await this.updateBookRaw({ id: id, book: book });
+    async updateBook(id: string, ordering?: string, book?: Book): Promise<Book> {
+        const response = await this.updateBookRaw({ id: id, ordering: ordering, book: book });
         return await response.value();
     }
 

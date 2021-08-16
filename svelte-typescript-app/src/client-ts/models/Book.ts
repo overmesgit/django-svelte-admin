@@ -69,8 +69,8 @@ export class Book {
         }
     }
 
-    static list(api: ApiApi, page?: number): Promise<InlineResponse<Book>> {
-        return api.listBooks(page)
+    static list(api: ApiApi, page?: number, order?: string): Promise<InlineResponse<Book>> {
+        return api.listBooks(page, order)
     }
 
     static retrieve(api: ApiApi, id: string): Promise<Book> {
@@ -82,7 +82,7 @@ export class Book {
     }
 
     static update(api: ApiApi, id: string, obj?: Book): Promise<Book> {
-        return api.updateBook(id, obj)
+        return api.updateBook(id, '', obj)
     }
 
     static destroy(api: ApiApi, id: string): Promise<void> {

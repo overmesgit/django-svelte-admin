@@ -27,7 +27,7 @@ export interface Base<T> {
 
     // Fields: {[s: string]: string}
 
-    list(api: ApiApi, page?: number): Promise<ResultInterface<T>>
+    list(api: ApiApi, page?: number, order?: string): Promise<ResultInterface<T>>
 
     retrieve(api: ApiApi, id: string): Promise<T>
 
@@ -63,7 +63,7 @@ export abstract class BaseView<T extends Base<T>> {
     public model: Base<T>
 
     public fields: Array<T['Fields']> | Fields.All
-
+    public sortingField: Array<T['Fields']> | Fields.All
 
     // public widgets: {[s: string]: SvelteComponent} = {}
     public widgets: OptionsFlags<T['Fields']> = {} as OptionsFlags<T['Fields']>
@@ -102,8 +102,8 @@ export abstract class BaseView<T extends Base<T>> {
         )
     }
 
-    getQuery(page?: number): Promise<ResultInterface<T>> {
-        return this.model.list(this.api, page)
+    getQuery(page?: number, order?: string): Promise<ResultInterface<T>> {
+        return this.model.list(this.api, page, order)
     }
 
     getObject(id: string): Promise<T> {
@@ -122,8 +122,8 @@ export abstract class BaseView<T extends Base<T>> {
     public currentPage = 1
     public pageSize = 10
 
-    getQueryInternal(page?: number): Promise<ResultInterface<T>> {
-        let promise = this.getQuery(page)
+    getQueryInternal(page?: number, order?: string): Promise<ResultInterface<T>> {
+        let promise = this.getQuery(page, order)
         promise.then(value => {
             this.pagesCount = Math.ceil(value.count / this.pageSize)
         })

@@ -1,6 +1,6 @@
 <script lang="ts">
     import type {Base, BaseView} from "./BaseView"
-    import {Link, Route, Router} from "./svelte-routing"
+    import {Link, navigate, Route, Router} from "./svelte-routing"
     import {DetailView} from "./DetailView"
     import Detail from "./Detail.svelte"
     import Edit from "./Edit.svelte"
@@ -19,15 +19,17 @@
     let loading = false
     let pageCount = 1
     let currentPage = 1
+    let currentSorting
 
-    function changePage(page: number) {
-        let resp = view.getQueryInternal(page)
+    function changePage(page: number, order?: string) {
+        let resp = view.getQueryInternal(page, order)
         loading = true
         resp.then(res => {
             results = res.results
             pageCount = view.pagesCount
             loading = false
         })
+        currentSorting = order
         currentPage = page
     }
 
@@ -42,6 +44,11 @@
         } else {
             return detail.getObject(params.id)
         }
+    }
+
+    function OnEdit() {
+        changePage(1)
+        navigate(`${basePath}/${view.modelName()}`)
     }
 </script>
 
@@ -58,7 +65,17 @@
                     <thead>
                     <tr>
                         {#each view.getFields() as f}
-                            <th>{f}</th>
+                            <th class="is-capitalized">{f}
+                                <span class="icon">
+                                        {#if currentSorting === f}
+                                            <i class="fas fa-sort-up is-clickable" on:click|once={() => changePage(currentPage, `-${f}`)}></i>
+                                        {:else if currentSorting === `-${f}`}
+                                            <i class="fas fa-sort-down is-clickable" on:click|once={() => changePage(currentPage)}></i>
+                                        {:else}
+                                            <i class="fas fa-sort is-clickable" on:click|once={() => changePage(currentPage, f)}></i>
+                                        {/if}
+                                </span>
+                            </th>
                         {/each}
                     </tr>
                     </thead>
@@ -113,7 +130,7 @@
             <Edit view="{edit}" obj="{getRouteObject(params)}"/>
         </Route>
         <Route path="/add">
-            <Create view="{create}" successUrl="{basePath}/{view.modelName()}"/>
+            <Create view="{create}" onEdit="{OnEdit}"/>
         </Route>
     </Router>
 

@@ -2,10 +2,9 @@
     import {EditView} from "./EditView"
     import Enum from "./inputs/Enum.svelte"
     import DateInput from "./inputs/DateInput.svelte"
-    import {navigate} from "./svelte-routing"
 
     export let view: EditView<any>
-    export let successUrl: string
+    export let onEdit: () => void
     let Model: any = view.model
     let my_obj: any = new Model()
     let errors: { [name: string]: Array<string> } = {}
@@ -17,7 +16,7 @@
 
     function create() {
         view.save(my_obj).then(
-            () => navigate(successUrl),
+            onEdit,
             (reason) => {
                 reason.json().then(
                     (data) => {

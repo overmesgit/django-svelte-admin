@@ -762,6 +762,15 @@
             "schema": {
               "type": "integer"
             }
+          },
+          {
+            "name": "ordering",
+            "required": false,
+            "in": "query",
+            "description": "Which field to use when ordering the results.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -867,6 +876,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "ordering",
+            "required": false,
+            "in": "query",
+            "description": "Which field to use when ordering the results.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -894,6 +912,15 @@
             "in": "path",
             "required": true,
             "description": "A unique integer value identifying this book.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ordering",
+            "required": false,
+            "in": "query",
+            "description": "Which field to use when ordering the results.",
             "schema": {
               "type": "string"
             }
@@ -946,6 +973,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "ordering",
+            "required": false,
+            "in": "query",
+            "description": "Which field to use when ordering the results.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -992,6 +1028,15 @@
             "in": "path",
             "required": true,
             "description": "A unique integer value identifying this book.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ordering",
+            "required": false,
+            "in": "query",
+            "description": "Which field to use when ordering the results.",
             "schema": {
               "type": "string"
             }
